@@ -12,6 +12,7 @@ section {
   border: 1px solid #b9b3b3;
   border-radius: 2px;
 }
-h5{
+section > h5{
   margin: 0rem;
+  text-align: center;
 }
