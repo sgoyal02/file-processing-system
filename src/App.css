@@ -1,0 +1,17 @@
+.app {
+  min-height: 100vh;
+ display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+}
+section {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #b9b3b3;
+  border-radius: 2px;
+}
+h5{
+  margin: 0rem;
+}
