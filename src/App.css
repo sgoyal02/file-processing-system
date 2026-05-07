@@ -1,18 +1,12 @@
-.app {
-  min-height: 100vh;
- display: flex;
-  flex-direction: column;
 
-  justify-content: center;
-  align-items: center;
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing:border-box;
 }
-section {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid #b9b3b3;
-  border-radius: 2px;
-}
-section > h5{
-  margin: 0rem;
-  text-align: center;
+body{
+  font-family:system-ui, Arial, sans-serif;
+  background: #d5d5d5;
+  color: #000;
 }
