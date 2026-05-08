@@ -1,4 +1,3 @@
-import './App.css'
 import AuthContextProvider from './contexts/AuthContext'
 import AppRoutes from './routes/AppRoutes'
 

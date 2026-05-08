@@ -93,7 +93,6 @@ const LoginPage = () => {
               id="password"
               type="password"
               className="user-inp"
-              placeholder="......."
               value={userData.pswd}
               onChange={(e) => {
                  setUserData((prev)=>({...prev, pswd: e.target.value}))

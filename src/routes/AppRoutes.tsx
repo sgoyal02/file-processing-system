@@ -3,6 +3,7 @@ import LoginPage from "../pages/LoginPage";
 import PrivateRoutes from "./PrivateRoutes";
 import ProjectsPage from "../pages/ProjectsPage";
 import Redirect from "./Redirect";
+import Dashboard from "../pages/Dashboard";
 
 
 export default function AppRoutes () {
@@ -12,7 +13,9 @@ export default function AppRoutes () {
                 <Route path="/" element={<Redirect />} />
                 <Route path={'/login'} element={<LoginPage/>}/>
                 <Route element={<PrivateRoutes/>}>
+                    <Route element={<Dashboard/>}>
                     <Route path={'/projects'} element={<ProjectsPage/>}/>
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>
