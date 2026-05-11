@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import '../styles/login.css'
 import type { FormErr } from '../services/types';
-import { handleLogin } from '../services/apiService';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useApiService } from '../services/apiService';
 
 const LoginPage = () => {
     const [userData, setUserData] = useState({email:"", pswd:""})
     const [err, setErr] = useState<FormErr>({});
     const {authData, onLogin, setLoad,setError} = useAuth();
     const navigate= useNavigate();
+    const {handleLogin} = useApiService();
 
     const validateForm = ():boolean =>{
         const newErr: FormErr={};

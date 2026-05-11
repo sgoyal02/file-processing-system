@@ -1,57 +1,65 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "email": "admin@example.com",
       "password": "123456",
       "token": "fake-jwt-token-1"
     }
   ],
-
   "projects": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Invoice Processing",
       "description": "Handles vendor invoice uploads and processing",
       "createdAt": "2026-01-10T10:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Image Compression",
       "description": "Compress large image files into zip",
       "createdAt": "2026-02-15T14:30:00Z"
+    },
+    {
+      "name": "testp1",
+      "description": "add test p1 desc",
+      "createdAt": "2026-05-11T14:20:29.990Z",
+      "filesCount": 0,
+      "jobsCount": 0,
+      "id": "tIv8Z_TDm60"
     }
   ],
-
   "files": [
     {
-      "id": 1,
+      "id": "1",
       "projectId": 1,
       "name": "invoice_jan.pdf",
       "size": 24576,
       "uploadedAt": "2026-01-11T09:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "projectId": 1,
       "name": "invoice_feb.pdf",
       "size": 30500,
       "uploadedAt": "2026-01-12T11:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "projectId": 2,
       "name": "image1.png",
       "size": 502400,
       "uploadedAt": "2026-02-16T10:30:00Z"
     }
   ],
-
   "jobs": [
     {
-      "id": 1,
+      "id": "1",
       "projectId": 1,
-      "fileIds": [1, 2],
+      "fileIds": [
+        1,
+        2
+      ],
       "status": "COMPLETED",
       "progress": 100,
       "createdAt": "2026-01-12T12:00:00Z",
@@ -59,14 +67,17 @@
       "downloadUrl": "https://example.com/download/invoices_jan_feb.zip"
     },
     {
-      "id": 2,
+      "id": "2",
       "projectId": 2,
-      "fileIds": [3],
+      "fileIds": [
+        3
+      ],
       "status": "PROCESSING",
       "progress": 40,
       "createdAt": "2026-02-16T11:00:00Z",
       "completedAt": null,
       "downloadUrl": null
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
