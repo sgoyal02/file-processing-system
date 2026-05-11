@@ -10,21 +10,6 @@ interface ModalProps {
 }
 
 const DialogModal = ({ isOpen, title, onClose, modalAction, secTxt="Cancel", primTxt="Yes", children }: ModalProps) => {
-  //onesc close
-  // useEffect(() => {
-  //   if (!isOpen) return;
-  //   function handleKey(e: KeyboardEvent) {
-  //     if (e.key === 'Escape') onClose();
-  //   }
-  //   document.addEventListener('keydown', handleKey);
-  //   return () => document.removeEventListener('keydown', handleKey);
-  // }, [isOpen, onClose]);
-
-  // //scroll hid
-  // useEffect(() => {
-  //   document.body.style.overflow = isOpen ? 'hidden' : '';
-  //   return () => { document.body.style.overflow = ''; };
-  // }, [isOpen]);
 
   if (!isOpen) return null;
 

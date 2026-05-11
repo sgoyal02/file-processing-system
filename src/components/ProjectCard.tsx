@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Project } from '../services/types';
 import '../styles/projects.css'
-import DialogModal from './DialogModal';
-
 interface ProjectCardProps {
   project: Project;
   onDelete: (id: string) => Promise<void>;

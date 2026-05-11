@@ -28,3 +28,16 @@ export interface LoginResult{
     user: User | null,
     errTxt:string
 }
+export interface Project{
+    id: string,
+    name:string,
+    description:string,
+    createdAt:string,
+    filesCount:number,
+    jobsCount:number
+}
+export interface AddProjectFormErr{
+    name?:string,
+    description?: string,
+    res?:string
+}

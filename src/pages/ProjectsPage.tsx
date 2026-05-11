@@ -1,8 +1,5 @@
 
 import { useEffect, useState } from 'react';
-// import { ProjectCard } from '../components/ProjectCard';
-// import { Modal } from '../components/Modal';
-// import { CreateProjectForm } from '../components/CreateProjectForm';
 import '../styles/projects.css';
 import { useProjects } from '../contexts/ProjectsContext';
 import { ProjectCard } from '../components/ProjectCard';
