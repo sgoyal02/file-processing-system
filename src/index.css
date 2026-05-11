@@ -5,10 +5,14 @@
   --text-secondary: #353434;
   --text-input: #36383d;
   --border: #5e5d5d;
+  --border-light: #e5e7eb;
   --bg-site: #f4f5fd;
   --primary-hover: #4338ca;
   --primary-active: #2f2a91;
   --primary-light: #a6a3e7;
+  --primary-disabled: #a5b4fc;
+  --primary-hover: #ddd6fe;
+  --primary-box-shadow: rgba(79, 70, 229, 0.22);
   --alert: #f44336;
   --alert-hover: #cf3333;
   --alert-light: #fef2f2;
@@ -17,6 +21,8 @@
 
   --sidebar-width: 220px;
   --head-height: 56px;
+  --custom-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+  --bg-light:#f3f4f6;
 }
 /* to do- add vars in login file */
 
