@@ -1,18 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { Project } from '../services/types';
+import { formatDate, type Project } from '../services/types';
 import '../styles/projects.css'
 interface ProjectCardProps {
   project: Project;
   onDelete: (id: string) => Promise<void>;
-}
-
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
 }
 
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {

@@ -1,16 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/projects.css';
-import type { Project } from '../services/types';
+import { formatDate, type Project } from '../services/types';
 import { useApiService } from '../services/apiService';
-
-function formatDate(dateParam: string): string {
-  return new Date(dateParam).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-}
 
 const ProjectDetail = () => {
   console.log("in detail");

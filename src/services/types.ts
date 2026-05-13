@@ -1,3 +1,11 @@
+export const formatDate=(dateParam: string): string=> {
+  return new Date(dateParam).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
 export interface User{
     id:string,
     email: string,
@@ -40,4 +48,23 @@ export interface AddProjectFormErr{
     name?:string,
     description?: string,
     res?:string
+}
+
+export interface SavedFile {
+  id: string;
+  projectId: string | number;
+  name: string;
+  size: number; 
+  uploadedAt: string;
+}
+export interface FileQueue{
+    id:string,
+    file: File,
+    progress:number,
+    status:'pending'| 'completed'| 'uploading'| 'err'
+}
+
+export interface SavedJobs{
+    id: string,
+    
 }
