@@ -24,7 +24,7 @@
       "name": "testp1",
       "description": "add test p1 desc",
       "createdAt": "2026-05-11T14:20:29.990Z",
-      "filesCount": 0,
+      "filesCount": 3,
       "jobsCount": 0,
       "id": "tIv8Z_TDm60"
     }
@@ -50,6 +50,27 @@
       "name": "image1.png",
       "size": 502400,
       "uploadedAt": "2026-02-16T10:30:00Z"
+    },
+    {
+      "id": "3iWjVH8onJQ",
+      "name": "sg1.pdf",
+      "projectId": "tIv8Z_TDm60",
+      "size": 1042434,
+      "uploadedAt": "2026-05-13T14:17:42.767Z"
+    },
+    {
+      "id": "bYmoWO5rU5Q",
+      "name": "hj.pdf",
+      "projectId": "tIv8Z_TDm60",
+      "size": 1042625,
+      "uploadedAt": "2026-05-13T14:17:43.575Z"
+    },
+    {
+      "id": "EYwOK6Q50N4",
+      "name": "carousel2.jpg",
+      "projectId": "tIv8Z_TDm60",
+      "size": 1033814,
+      "uploadedAt": "2026-05-13T14:26:10.433Z"
     }
   ],
   "jobs": [
