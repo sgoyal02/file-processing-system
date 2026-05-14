@@ -4,7 +4,7 @@ import { formatDate, type Project } from '../services/types';
 import '../styles/projects.css'
 interface ProjectCardProps {
   project: Project;
-  onDelete: (id: string) => Promise<void>;
+  onDelete: (id: string|number) => Promise<void>;
 }
 
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {
@@ -28,7 +28,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
       <div className="flex-between">
         <h3 className="card-name">{project.name}</h3>
         <button
-          className="flex-center btn-delete"
+          className="flex-center btn btn-delete"
           onClick={handleDelete}
           disabled={delProj.isDel}
           title="Delete project"

@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet} from 'react-router-dom';
 import '../styles/layout.css';
 import { useAuth } from '../contexts/AuthContext';
 
 const MENU_ITEMS = [
   {to: '/projects', label: 'Projects'},
-  {to: '/jobs', label: 'Jobs Tracking' },
+  // {to: '/jobs', label: 'Jobs Tracking' },
 ];
 
 const AppLayout =()=> {
   const { authData, onLogout } = useAuth();
-  const navigate = useNavigate();
   const [sideMenu, setSideMenu] = useState(false);
 
   function handleLogout() {
