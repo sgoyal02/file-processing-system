@@ -6,6 +6,18 @@ export const formatDate=(dateParam: string): string=> {
   });
 }
 
+export const formaFulltDate = (dateParam: string): string => {
+  const newDate= new Date(dateParam).toLocaleString('en-US', {
+    year:'numeric',
+    month:'long',
+    day:'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+  return newDate.replace(' at ', ' ');
+}
+
 export interface User{
     id:string,
     email: string,
@@ -37,7 +49,7 @@ export interface LoginResult{
     errTxt:string
 }
 export interface Project{
-    id: string,
+    id: string|number,
     name:string,
     description:string,
     createdAt:string,
@@ -51,8 +63,8 @@ export interface AddProjectFormErr{
 }
 
 export interface SavedFile {
-  id: string;
-  projectId: string | number;
+  id: string|number;
+  projectId: string| number;
   name: string;
   size: number; 
   uploadedAt: string;
@@ -65,6 +77,12 @@ export interface FileQueue{
 }
 
 export interface SavedJobs{
-    id: string,
-    
+    id: string|number,
+    projectId: string| number,
+    fileIds:Array<string | number>,
+    status: 'PROCESSING'| 'COMPLETED'| 'ERROR',
+    progress:number,
+    createdAt:string,
+    completedAt:string|null,
+    downloadUrl:string| null
 }

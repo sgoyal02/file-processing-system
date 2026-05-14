@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import type { AuthData, User } from "../services/types";
 import { actionReducer, initData } from "../hooks/actionReducer";
 
