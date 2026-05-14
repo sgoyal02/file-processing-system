@@ -9,7 +9,7 @@ interface ProjectsContextType {
   err: string;
   getProjects:() => Promise<void>;
   addProject:(data:{ name: string, description: string })=> Promise<void>;
-  delProject:(id: string)=> Promise<void>;
+  delProject:(id: string|number)=> Promise<void>;
 }
 const ProjectsContext= createContext<ProjectsContextType | null>(null);
 
@@ -45,7 +45,7 @@ const ProjectsProvider =({ children}:{children: React.ReactNode})=> {
     }
   }, []);
 
-  const delProject = useCallback(async (id: string) => {
+  const delProject = useCallback(async (id: string|number) => {
     await removeProject(id);
      setState((prev)=>({...prev, data: prev.data.filter((p)=>p.id!==id)}))
   }, []);

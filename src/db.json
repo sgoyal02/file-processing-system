@@ -25,7 +25,7 @@
       "description": "add test p1 desc",
       "createdAt": "2026-05-11T14:20:29.990Z",
       "filesCount": 3,
-      "jobsCount": 0,
+      "jobsCount": 4,
       "id": "tIv8Z_TDm60"
     }
   ],
@@ -52,13 +52,6 @@
       "uploadedAt": "2026-02-16T10:30:00Z"
     },
     {
-      "id": "3iWjVH8onJQ",
-      "name": "sg1.pdf",
-      "projectId": "tIv8Z_TDm60",
-      "size": 1042434,
-      "uploadedAt": "2026-05-13T14:17:42.767Z"
-    },
-    {
       "id": "bYmoWO5rU5Q",
       "name": "hj.pdf",
       "projectId": "tIv8Z_TDm60",
@@ -71,6 +64,13 @@
       "projectId": "tIv8Z_TDm60",
       "size": 1033814,
       "uploadedAt": "2026-05-13T14:26:10.433Z"
+    },
+    {
+      "id": "JU8q1wfw4Vc",
+      "name": "carousel4.jpg",
+      "projectId": "tIv8Z_TDm60",
+      "size": 164667,
+      "uploadedAt": "2026-05-14T06:13:47.019Z"
     }
   ],
   "jobs": [
@@ -94,10 +94,60 @@
         3
       ],
       "status": "PROCESSING",
-      "progress": 40,
+      "progress": 60,
       "createdAt": "2026-02-16T11:00:00Z",
-      "completedAt": null,
-      "downloadUrl": null
+      "completedAt": "",
+      "downloadUrl": ""
+    },
+    {
+      "createdAt": "2026-05-14T11:53:04.978Z",
+      "fileIds": [
+        "bYmoWO5rU5Q",
+        "EYwOK6Q50N4"
+      ],
+      "projectId": "tIv8Z_TDm60",
+      "completedAt": "2026-05-14T11:53:22.070Z",
+      "downloadUrl": "/sample-files/test.zip",
+      "progress": 100,
+      "status": "COMPLETED",
+      "id": "I11ShnKU-Ho"
+    },
+    {
+      "createdAt": "2026-05-14T11:53:09.862Z",
+      "fileIds": [
+        "JU8q1wfw4Vc"
+      ],
+      "projectId": "tIv8Z_TDm60",
+      "completedAt": "2026-05-14T11:53:36.910Z",
+      "downloadUrl": "/sample-files/test.zip",
+      "progress": 100,
+      "status": "COMPLETED",
+      "id": "CPgshw9Z7Ww"
+    },
+    {
+      "createdAt": "2026-05-14T12:01:56.854Z",
+      "fileIds": [
+        "JU8q1wfw4Vc"
+      ],
+      "projectId": "tIv8Z_TDm60",
+      "completedAt": "2026-05-14T12:02:31.315Z",
+      "downloadUrl": "/sample-files/job-PeGFoiV7TZ4.zip",
+      "progress": 100,
+      "status": "COMPLETED",
+      "id": "PeGFoiV7TZ4"
+    },
+    {
+      "createdAt": "2026-05-14T13:06:34.277Z",
+      "fileIds": [
+        "bYmoWO5rU5Q",
+        "EYwOK6Q50N4"
+      ],
+      "projectId": "tIv8Z_TDm60",
+      "completedAt": "2026-05-14T13:06:49.596Z",
+      "downloadUrl": "/sample-files/job-ZCu1S2XYRmo.zip",
+      "progress": 100,
+      "status": "COMPLETED",
+      "id": "ZCu1S2XYRmo"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
