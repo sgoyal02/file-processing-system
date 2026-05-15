@@ -149,6 +149,5 @@
       "status": "COMPLETED",
       "id": "ZCu1S2XYRmo"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

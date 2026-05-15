@@ -1,7 +1,7 @@
 import { useAuth } from "../contexts/AuthContext";
 import type { LoginCreds, LoginResult, Project, SavedFile, SavedJobs } from "./types";
 
-const BASE_URL = 'http://localhost:4000';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export function useApiService() {
   const { authData } = useAuth();
@@ -25,6 +25,7 @@ export function useApiService() {
       //not seraching with id, pswd????  //que-
       // const res= await fetch(`${BASE_URL}/users?email=${encodeURIComponent(data.email)}&password=${encodeURIComponent(data.pswd)}`);
       const res = await fetch(`${BASE_URL}/users?email=${encodeURIComponent(data.email)}`);
+      console.log("res: ", res)
       if (!res.ok)
         throw new Error("Request failed")
       else {
@@ -35,7 +36,7 @@ export function useApiService() {
           return { user: users[0], errTxt: "" };
         }
       }
-    } catch {
+    } catch(err) {
       throw new Error("Something went wrong.")
     }
   }
