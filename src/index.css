@@ -24,8 +24,11 @@
   --bg-light:#f3f4f6;
   --success: #16a34a;
   --success-light: #4ade80;
+  --amber: #f59e0b;
+  --amber-light: #fef3c7;
+  --secondary: #0ea5e9;
+  --secondary-light: #e0f2fe; 
 }
-/* to do- add vars in login file */
 
 
 body{

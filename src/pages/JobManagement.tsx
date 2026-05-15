@@ -18,11 +18,22 @@ const JobManagement = () => {
 
   useEffect(() => {
     if (!projectId) return;
-    Promise.all([
+    setFiles(prev => ({ ...prev, isLoad: true, errTxt: "" }));
+    setJobs(prev => ({ ...prev, isLoad: true, err: "" }));
+
+    Promise.allSettled([
       apiService.fetchFiles(projectId), apiService.fetchJobs(projectId)
     ]).then(([filesData, jobsData]) => {
-      setFiles((prev) => ({ ...prev, isLoad: false, data: filesData }));
-      setJobs((prev) => ({ ...prev, isLoad: false, data: jobsData }))
+       if (filesData.status === 'fulfilled') {
+      setFiles(prev => ({ ...prev, isLoad: false, data: filesData.value }));
+    } else {
+      setFiles(prev => ({ ...prev, isLoad: false, errTxt: "Failed to get files data." }));
+    }
+    if (jobsData.status === 'fulfilled') {
+      setJobs(prev => ({ ...prev, isLoad: false, data: jobsData.value }));
+    } else {
+      setJobs(prev => ({ ...prev, isLoad: false, err: "Failed to get jobs." }));
+    }
     })
   }, [projectId]);
 
@@ -141,6 +152,7 @@ const JobManagement = () => {
                   files.selIds.size < files.data.length;
                 }
               }}
+              disabled={files.isLoad || !!files.errTxt}
         onChange={handleSelectAll}
       />
       </th>

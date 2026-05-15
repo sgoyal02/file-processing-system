@@ -23,9 +23,7 @@ export function useApiService() {
   const handleLogin = async (data: LoginCreds): Promise<LoginResult> => {
     try {
       //not seraching with id, pswd????  //que-
-      // const res= await fetch(`${BASE_URL}/users?email=${encodeURIComponent(data.email)}&password=${encodeURIComponent(data.pswd)}`);
-      const res = await fetch(`${BASE_URL}/users?email=${encodeURIComponent(data.email)}`);
-      console.log("res: ", res)
+      const res= await fetch(`${BASE_URL}/users?email=${encodeURIComponent(data.email)}&password=${encodeURIComponent(data.pswd)}`);
       if (!res.ok)
         throw new Error("Request failed")
       else {
@@ -129,7 +127,6 @@ export function useApiService() {
       method: 'DELETE',
       headers: authHeaders(),
     });
-    console.log("res api: ", res);
     if (!res.ok) throw new Error('Delete file fail');
   }
 
