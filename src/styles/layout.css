@@ -64,14 +64,14 @@
   padding: 4px;
 }
 
-.menu-icon span {
+/* .menu-icon span {
   display: block;
   width: 20px;
   height: 2px;
   background: var(--text-main);
   border-radius: 2px;
-  transition: 0.3s; /*next to do- add for hover and shadow see */
-}
+  transition: 0.3s; 
+} */
 
 .btn-logout {
   display: flex;
@@ -160,7 +160,7 @@
   padding: 16px 16px 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .menu-icon {
     display: flex;
   }

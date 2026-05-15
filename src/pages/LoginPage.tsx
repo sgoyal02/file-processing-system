@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../styles/login.css'
 import type { FormErr } from '../services/types';
 import { useAuth } from '../contexts/AuthContext';
@@ -43,16 +43,26 @@ const LoginPage = () => {
                 setTimeout(()=>{
                   setErr((prev)=>({...prev, res: errTxt}))
                   setError();
-                }, 2000)
+                }, 1000)
             }
             } catch(err){
               setTimeout(()=>{
             setErr((prev)=>({...prev, res: err instanceof Error ? err.message : "Something went wrong"}));
                 setError();
-              }, 2000);
+              }, 1000);
             }
         }
     }
+
+  useEffect(() => {
+  if (!!err.res) {
+    const timer = setTimeout(() => {
+      setErr((prev) => ({ ...prev, res: "" }));
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [err.res]);
 
   return (
     <div className="login-main">
@@ -67,7 +77,12 @@ const LoginPage = () => {
  
         {!!err.res && (
           <div className="res-error" role="alert">
-            {err.res}
+            <span>
+              <svg width={"15px"} height={"15px"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 svg">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+              </svg>
+            </span>
+            <p className='txt-p'>{err.res}</p>
           </div>
         )}
  

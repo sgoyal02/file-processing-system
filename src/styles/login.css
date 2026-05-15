@@ -5,42 +5,65 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* background-color: #f8fafc;  */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 .login-container {
-  background: #fff;
-  border: 1px solid #f0f0f0;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-light);
   border-radius: 5px;
-  padding: 2rem;
+  padding:2rem;
   width: 100%;
   max-width: 420px;
+  box-shadow: var(--custom-box-shadow);
 }
 
 .app-name {
-    text-align: center;
-  margin-bottom: 2rem;
-  color:#4f46e5
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
+.app-name h3{
+  color:var(--primary);
+}
+
 .login-title {
     text-align: center;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
 .login-subTxt {
-  font-size: 0.875rem;
-  color: #353434;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
 
 .res-error {
   display: flex;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #f44336;
+  background-color: var(--alert-light);
+  border: 1px solid var(--alert);
+  gap: 4px;
+  color: var(--alert);
   border-radius: 5px;
   padding: 0.7rem 1rem;
   font-size: 0.8rem;
   margin-bottom: 1.2rem;
+  animation: fadeIn 0.3s ease-in-out;
+  align-items: center;
+}
+@keyframes fadeIn {
+  from{opacity: 0; transform: translateY(-5px);}
+  to{opacity: 1; transform: translateY(0);}
+}
+.svg{
+  display: flex;
+  align-items: center;
+}
+.txt-p{
+   margin:0;
+   line-height:1
 }
 
 .login-form {
@@ -56,43 +79,43 @@
 .inp-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #353434;
+  color: var(--text-secondary);
 }
 
 .user-inp{
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #5e5d5d;
+  border: 1px solid var(--border);
   border-radius: 5px;
   font-size: 0.9rem;
-  color: #36383d;
+  color: var(--text-input);
   background: #fff;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   box-sizing: border-box;
 }
 .user-inp::placeholder {
-  color: #9ca3af;
+  color: var(--help-text);
 }
 .user-inp:focus {
-  border-color: #4f46e5;
+  border-color: var(--primary);
 }
 
 .user-inp:disabled {
   background: #f9fafb;
-  color: #9ca3af;
+  color: var(--help-text);
   cursor: not-allowed;
 }
 .err .user-inp {
-  border-color: #f44336;
+  border-color: var(--alert);
 }
 .err .user-inp:focus {
-  border-color: #f44336;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.12);
+  border-color: var(--alert);
+  box-shadow: 0 0 0 2px var(--alert-box-shadow);
 }
 .inp-errTxt {
   font-size: 0.8rem;
-  color: #f44336;
+  color: var(--alert);
 }
 
 .login-btn {
@@ -101,7 +124,7 @@
   justify-content: center;
   width: 100%;
   padding: 0.6rem 1rem;
-  background-color: #4f46e5;
+  background-color:var(--primary);
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -111,15 +134,15 @@
   transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 .login-btn:hover:not(:disabled) {
-  background-color: #4f46e5;
+  background-color: var(--primary);
   box-shadow: 0 2px 8px rgba(71, 66, 163, 0.5);
 }
 .login-btn:active:not(:disabled) {
-  background-color: #2f2a91;
+  background-color: var(--primary-active);
 }
 
 .login-btn:disabled {
-  background-color: #a6a3e7;
+  background-color: var(--primary-light);
   cursor: not-allowed;
 }
 
@@ -141,15 +164,19 @@
   justify-content: center;
   background: #f0f0f0;
 }
+@keyframes spin {
+  to{transform: rotate(360deg);}
+}
 .spinner-area {
   display: inline-block;
   width: 30px;
   height: 30px;
   border: 3px solid rgba(79, 70, 229, 0.3);
-  border-top-color: #5a53eb;
+  border-top-color: var(--primary-active);
   border-radius: 50%;
-  /* animation:  */
+  animation: spin 0.6s linear infinite;
   flex-shrink: 0;
+  vertical-align: middle;
 }
 .spinner-btn {
   width: 16px;
@@ -157,6 +184,7 @@
   border-width: 2px;
   border-color: rgba(255, 255, 255, 0.35);
   border-top-color: #fff;
+  margin-right: 8px;
 }
 
 .logout-btn {
@@ -164,7 +192,7 @@
   align-items: center;
   justify-content: center;
   padding: 0.6rem 1rem;
-  background-color: #4f46e5;
+  background-color: var(--primary);
   color: #fff;
   border: none;
   border-radius: 5px;
