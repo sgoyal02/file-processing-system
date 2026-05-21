@@ -13,33 +13,27 @@ export function useApiService() {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
   }
-
-  //as per backend res format
-  const handleResponse = async<T>(res: Response):Promise<T> => {
-  const resData = await res.json();
-  console.log("rs datsa fomrat: ", resData)
-  if (!res.ok||!resData?.success) {
-    if (res.status=== 401) {
-      throw new Error('Unauthorized');
-    } else
-    throw new Error(resData?.msg||resData?.err|| 'Request fail');
+  const handleResponse = <T>(res: Response): Promise<T> => {
+    if (res.status === 401) throw new Error('Unauthorized');
+    if (res.status === 404) throw new Error('Not_found');
+    if (!res.ok) throw new Error(`Request failed: ${res.statusText}`);
+    return res.json() as Promise<T>;
   }
-  return resData.data as T;
-};
-  
+
   const handleLogin = async (data: LoginCreds): Promise<LoginResult> => {
     try {
-      const res= await fetch(`${BASE_URL}/auth/login`, {
-        method:'POST',
-        headers: authHeaders(),
-        body: JSON.stringify({email: data.email, password:data.pswd})
-      });
-      const resData= await res.json();
-      console.log("login res: ", res, resData);
-      if(!resData.success){
-        return {user:null, errTxt: resData.msg || 'Reuqest fail'}
+      //not seraching with id, pswd????  //que-
+      const res= await fetch(`${BASE_URL}/users?email=${encodeURIComponent(data.email)}&password=${encodeURIComponent(data.pswd)}`);
+      if (!res.ok)
+        throw new Error("Request failed")
+      else {
+        const users = await res.json();
+        if (!users.length)
+          return { user: null, errTxt: "Invalid login creds. Please try again." }
+        else {
+          return { user: users[0], errTxt: "" };
+        }
       }
-      return { user: resData.data.user, errTxt: "" };
     } catch(err) {
       throw new Error("Something went wrong.")
     }
@@ -51,7 +45,6 @@ export function useApiService() {
 
   const fetchProjects = async (): Promise<Project[]> => {
     const res = await fetch(`${BASE_URL}/projects`, { headers: authHeaders() });
-    console.log("res proj: ", res);
     return handleResponse<Project[]>(res);
   }
 
