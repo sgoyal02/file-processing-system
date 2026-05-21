@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import type { AuthData, User } from "../services/types";
 import { actionReducer, initData } from "../hooks/actionReducer";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
     authData: AuthData;
@@ -19,12 +20,23 @@ const AuthContextProvider = ({children}:{children: React.ReactNode}) =>{
         const authToken= localStorage.getItem("authToken");
         const authUser= localStorage.getItem("authUser");
         if(authToken && authUser){
-            dispatch({type: 'LOGIN_SUCCESS', 
-                payload:{user: JSON.parse(authUser), token:  authToken}});
+            try{
+                const decodedToken:{exp:number}=jwtDecode(authToken);
+                const isExpire = Date.now() >= decodedToken.exp * 1000; 
+                if (isExpire) {
+                console.warn("session expired.");
+                onLogout();
+                } else {
+                dispatch({
+                    type: 'LOGIN_SUCCESS', 
+                    payload: { user: JSON.parse(authUser), token: authToken }
+                });
+            } 
+            }catch(err){
+                onLogout();
+            }
         }else{
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('authUser')
-            dispatch({type:'LOGOUT'})
+           onLogout();
         }
     },[])
 

@@ -21,7 +21,7 @@ export const formaFulltDate = (dateParam: string): string => {
 export interface User{
     id:string,
     email: string,
-    password: string,
+    password?: string,
     token: string,
 }
 export interface AuthData{

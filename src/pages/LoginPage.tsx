@@ -36,9 +36,9 @@ const LoginPage = () => {
             const {user, errTxt} = await handleLogin(userData);
             console.log("exi: ", user, errTxt);
             if(user){
-                onLogin(user, ()=>{
-                    navigate('/projects');
-                });
+            onLogin(user, () => {
+              navigate('/projects');
+            });
             } else{
                 setTimeout(()=>{
                   setErr((prev)=>({...prev, res: errTxt}))
