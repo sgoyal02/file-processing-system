@@ -1,7 +1,8 @@
-import express, { Application } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from 'cors';
 import { dbPool } from "./db";
-import { globalRoute } from './router';
+import {globalRouter } from './router';
+import { sendError } from "./response";
 
 const app:Application=express();
 
@@ -18,5 +19,20 @@ checkDbConnect();
 
 app.use(cors())
 app.use(express.json());
-app.use('/api', globalRoute)
+app.use('/api', globalRouter)
+
+
+//global err custom
+app.use((err:any, req:Request, res:Response, next:NextFunction):void=>{
+    console.error("global catch: ", err.stack, err.message);
+    res.status(err.statusCode||500).json({success: false,
+        msg: err.message||'Internal server err',
+        statusCode: err.statusCode||500
+    })
+    const code = err.statusCode||500;
+  const msg = err.message || 'Internal server err';
+  sendError(res, msg, code);
+})
+
+
 export default app;

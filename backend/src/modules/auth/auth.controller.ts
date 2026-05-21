@@ -1,20 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import {validateCreds } from './auth.service';
+import { sendError, sendSuccess } from '../../response';
 
 export const login= async(req:Request, res:Response, next:NextFunction):Promise<void>=> {
     try {
-      const {email, password } = req.body;
+      const {email, password} = req.body;
       if (!email||!password) {
-        res.status(400).json({error: 'Request invalid: email, pswd fields are required.' });
-        return;
+        return sendError(res, 'Request invalid: email, pswd fields are required.', 400);
       }
       const authRes = await validateCreds(email, password);
-
       if (!authRes) {
-        res.status(401).json({ error: 'Invalid login creds.Please try again.' });
-        return;
+        return sendError(res, 'Invalid login creds.Please try again.', 401);
       }
-      res.json(authRes);
+      return sendSuccess(res, authRes,'Login success')
     } catch (err) {
       next(err);
     }
