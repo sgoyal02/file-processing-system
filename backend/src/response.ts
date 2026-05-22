@@ -7,7 +7,7 @@ export interface ApiResponse<T=any> {
   err:string|null
 } 
 
-export const sendSuccess=<T>(res:Response, data: T, msg='Success',statusCode = 200): void => {
+export const sendSuccess=<T>(res:Response,data: T, msg='Success',statusCode = 200): void => {
   const responseBody: ApiResponse<T> = {
     success: true, statusCode, msg,
     data, err: null,

@@ -19,19 +19,20 @@ checkDbConnect();
 
 app.use(cors())
 app.use(express.json());
+app.use((req, res, next) => {
+    console.log(`--${req.method}: ${req.path}`);
+    next();
+});
+
 app.use('/api', globalRouter)
 
 
 //global err custom
 app.use((err:any, req:Request, res:Response, next:NextFunction):void=>{
     console.error("global catch: ", err.stack, err.message);
-    res.status(err.statusCode||500).json({success: false,
-        msg: err.message||'Internal server err',
-        statusCode: err.statusCode||500
-    })
-    const code = err.statusCode||500;
-  const msg = err.message || 'Internal server err';
-  sendError(res, msg, code);
+  const code = err.statusCode|| 500;
+    const msg = err.message||'Internal server error';
+    sendError(res, msg, code);
 })
 
 
