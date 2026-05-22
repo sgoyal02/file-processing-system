@@ -55,14 +55,11 @@ export function useApiService() {
     return handleResponse<Project[]>(res);
   }
 
-  const createProject = async (data: { name: string; description: string }): Promise<Project> => {
+  const createProject = async (data:{ name: string; description: string }): Promise<Project> => {
     const res = await fetch(`${BASE_URL}/projects`, {  //or ?_embed=files&_embed=jobs  ??
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify({
-        ...data, createdAt: new Date().toISOString(),
-        filesCount: 0, jobsCount: 0
-      }),
+      body: JSON.stringify({...data}),
     });
     return handleResponse<Project>(res);
   }
@@ -78,17 +75,18 @@ export function useApiService() {
       method: 'DELETE',
       headers: authHeaders(),
     });
-    if (!res.ok) throw new Error('Delete fail');
+    await handleResponse<null>(res);  //success, msg, data:-null
   }
 
   const fetchFiles = async (id: string | number): Promise<SavedFile[]> => {
-    const res = await fetch(`${BASE_URL}/files?projectId=${id}`, { headers: authHeaders() });
+    const res = await fetch(`${BASE_URL}/projects/${id}/files`, { headers: authHeaders() });
     return handleResponse<SavedFile[]>(res);
   }
 
+
   const uploadFile = async (file: File, id: string | number,
-    onProgress: (percent: number) => void): Promise<SavedFile> => {
-    await new Promise((resolve) => {
+  onProgress: (percent: number) => void): Promise<SavedFile> => {
+ await new Promise((resolve) => {
       let pr = 0;
       const gap = setInterval(() => {
         pr = pr + Math.floor(Math.random() * 30) + 10;
@@ -102,21 +100,16 @@ export function useApiService() {
         }
       }, 400);
     });
-    const fileData = {
-      id: crypto.randomUUID(),  //or omit<savedfiel, 'id'>
-      name: file.name,
-      projectId: id, size: file.size, uploadedAt: new Date().toISOString()
-    }
-    return addFileToProject(fileData);
-  }
-  const addFileToProject = async (fileData: SavedFile): Promise<SavedFile> => {
-    const res = await fetch(`${BASE_URL}/files`, {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify(fileData),
-    });
-    return handleResponse<SavedFile>(res);
-  }
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch(`${BASE_URL}/projects/${id}/files`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+  return handleResponse<SavedFile>(res);
+}
 
   const updateProjectDataCount = async (id: string,
     newCount: { filesCount?: number; jobsCount?: number }
@@ -129,16 +122,16 @@ export function useApiService() {
     return res.ok;
   };
 
-  const delFile = async (id: string | number): Promise<void> => {
-    const res = await fetch(`${BASE_URL}/files/${id}`, {
-      method: 'DELETE',
-      headers: authHeaders(),
-    });
-    if (!res.ok) throw new Error('Delete file fail');
-  }
+  const delFile = async (projectId: string | number, fileId: string | number): Promise<void> => {
+  const res = await fetch(`${BASE_URL}/projects/${projectId}/files/${fileId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  });
+  await handleResponse<null>(res);
+}
 
   const fetchJobs = async (id: string | number): Promise<SavedJobs[]> => {
-    const res = await fetch(`${BASE_URL}/jobs?projectId=${id}`, { headers: authHeaders() });
+    const res = await fetch(`${BASE_URL}/projects/${id}/jobs`, { headers: authHeaders() });
     return handleResponse<SavedJobs[]>(res);
   }
 
