@@ -479,6 +479,9 @@ background: var(--bg-site);
 .file-err{
   background-color: var(--alert);
 }
+.err-txt{
+  color: var(--alert-hover);
+}
 .file-success{
   background-color: var(--suceess-light);
   color: var(--suceess);
@@ -529,8 +532,8 @@ background: var(--bg-site);
 /*-- job css*/
 .success{background-color: var(--success);}
 .error{background-color: var(--alert);}
-
 .progress{background-color: var(--primary-hover);}
+
 .status-list{
   display: flex;
   /* flex-direction: column; */

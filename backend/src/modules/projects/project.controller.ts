@@ -18,7 +18,7 @@ export const projController = {
     const id = req.params.id as string;  // ! not working ??, as sString only
     try {
       const project = await projService.getProjectDetail(id);
-      sendSuccess(res, project, 'Project detail not found', 200);
+      sendSuccess(res, project, 'Project fetch success', 200);
     } catch (err) {
       const errMsg = err instanceof Error?err.message:'';
       const code = errMsg=== 'Project not found.' ? 404 : 500;

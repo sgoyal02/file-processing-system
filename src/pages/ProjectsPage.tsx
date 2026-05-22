@@ -11,7 +11,7 @@ const ProjectsPage = () => {
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     getProjects();
-  }, [getProjects]);
+  }, []);
 
   const handleAdd=async(data:{name: string;description:string}):Promise<{ success: boolean; msg: string }>=>{
     try{

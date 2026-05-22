@@ -20,9 +20,9 @@ const ProjectsProvider =({ children}:{children: React.ReactNode})=> {
   const { onLogout } = useAuth();
   const {fetchProjects, createProject, removeProject} = useApiService();
 
-  function handleAuthError(err: unknown) {
+  const handleAuthError= useCallback((err: unknown)=> {
     if (err instanceof Error && err.message === 'Unauthorized') onLogout();
-  }
+  },[onLogout]);
 
   const getProjects = useCallback(async () => {
    setState((prev)=>({...prev, isLoad: true, err:""}))
@@ -37,18 +37,23 @@ const ProjectsProvider =({ children}:{children: React.ReactNode})=> {
 
   const addProject = useCallback(async (data: { name: string, description: string }) => {
     try{
-    const newProj = await createProject(data);
-    setState((prev)=>({...prev, data: [newProj, ...prev.data]}))
+    await createProject(data);
+    await getProjects();
     } catch (err){
       handleAuthError(err);
       throw err;
     }
-  }, []);
+  }, [getProjects]);
 
   const delProject = useCallback(async (id: string|number) => {
+    try{
     await removeProject(id);
-     setState((prev)=>({...prev, data: prev.data.filter((p)=>p.id!==id)}))
-  }, []);
+    await getProjects();
+    }catch(err){
+      handleAuthError(err);
+      throw err;
+    }
+  }, [getProjects]);
 
   return (
     <ProjectsContext.Provider value={{ ...state, getProjects, addProject, delProject }}>
