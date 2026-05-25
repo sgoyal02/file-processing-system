@@ -80,7 +80,7 @@ export interface SavedJobs{
     id: string|number,
     projectId: string| number,
     fileIds:Array<string | number>,
-    status: 'PROCESSING'| 'COMPLETED'| 'ERROR',
+    status:'PENDING'| 'PROCESSING'| 'COMPLETED'| 'FAILED',
     progress:number,
     createdAt:string,
     completedAt:string|null,

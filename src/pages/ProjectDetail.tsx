@@ -134,7 +134,7 @@ const ProjectDetail = () => {
                   <div className="progress" 
                   style={{ width: `${(detailState.jobs.filter(j => j.status === 'PROCESSING').length/detailState.jobs.length)* 100}%` }}>
                   </div>
-                  <div className="error" style={{ width: `${(detailState.jobs.filter(j => j.status === 'ERROR').length/detailState.jobs.length)* 100}%` }}></div>
+                  <div className="error" style={{ width: `${(detailState.jobs.filter(j => j.status === 'FAILED').length/detailState.jobs.length)* 100}%` }}></div>
                 </div>
 
                 <div className="status-list flex-between">
@@ -152,7 +152,7 @@ const ProjectDetail = () => {
 
                     <span className="dot error"></span>
                     <span className="label">Failed:</span>
-                    <span className="value">{detailState.jobs.filter(j => j.status === 'ERROR').length}</span>
+                    <span className="value">{detailState.jobs.filter(j => j.status === 'FAILED').length}</span>
                   </div>
                 </div>
               </div>

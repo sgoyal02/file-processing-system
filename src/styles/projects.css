@@ -340,6 +340,7 @@
   cursor: pointer;
   padding: 0;
   transition: color 0.15s;
+  width: fit-content;
 }
 .btn-back:hover {
   color: var(--primary);
@@ -568,13 +569,14 @@ background: var(--bg-site);
 }
 .status-badge.completed {
   color: var(--success);
-  border: 1px solid var(--success-light);
+  /* border: 1px solid var(--success-light); */
+  background-color: var(--success-light);
 }
-.status-badge.error {
+.status-badge.failed {
   color: var(--alert);
-  border: 1px solid var(--alert-light);
+  background-color: var(--alert-light);
 }
 .status-badge.processing {
-  color: var(--primary-disabled);
-  border: 1px solid var(--primary-hover);
+  color: var(--primary);
+   background-color: var(--primary-disabled);
 }
