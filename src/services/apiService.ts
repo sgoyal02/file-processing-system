@@ -135,38 +135,30 @@ export function useApiService() {
     return handleResponse<SavedJobs[]>(res);
   }
 
-  const createZipJob = async (data: Omit<SavedJobs, 'id'>): Promise<SavedJobs> => {
-    const res = await fetch(`${BASE_URL}/jobs`, {
+  const createZipJob = async (projectId:string|number, fileIds: (string | number)[]): Promise<SavedJobs> => {
+    const res = await fetch(`${BASE_URL}/projects/${projectId}/jobs`, {
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify(data),
+      body: JSON.stringify({fileIds}),
     });
     return handleResponse<SavedJobs>(res);
   };
 
-  const getJobStatus = async (id: string| number):Promise<SavedJobs> => {
-    const res = await fetch(`${BASE_URL}/jobs/${id}`);
-    const job = await res.json();
-    if (job.status=== 'COMPLETED' || job.status=== 'ERROR') return job;
-    const failProb= Math.random() <0.05;
-    const newProg = failProb ? job.progress : Math.min((job.progress|| 0) + 20, 100);
-    const newStatus =failProb ? 'ERROR': newProg===100? 'COMPLETED': 'PROCESSING';
-    const newres = await fetch(`${BASE_URL}/jobs/${id}`, {
-      method: 'PATCH',
-      headers: authHeaders(),
-      body: JSON.stringify({
-        progress: newProg,
-        status: newStatus,
-        completedAt: newStatus=== 'COMPLETED'? new Date().toISOString() : '',
-        downloadUrl: newStatus=== 'COMPLETED'? `/sample-files/job-${id}.zip` : ""
-      })
+  const getJobStatus = async (projectId:string|number, id: string| number):Promise<SavedJobs> => {
+    const res = await fetch(`${BASE_URL}/projects/${projectId}/jobs/${id}`,{
+      headers: authHeaders()
     });
-    return newres.json();
+    return handleResponse<SavedJobs>(res);
+  };
+
+  const downloadZip= (projectId: string | number, id:string | number) => {
+  window.open(`${BASE_URL}/api/projects/${projectId}/jobs/${id}/download`, '_blank');
   };
 
   return {
     handleLogin, isTokenMiss, createProject, fetchProjects,
     fetchProjectById, removeProject, fetchFiles,
-    uploadFile, delFile, updateProjectDataCount, fetchJobs, createZipJob, getJobStatus
+    uploadFile, delFile, updateProjectDataCount, fetchJobs, createZipJob, getJobStatus,
+    downloadZip
   }
 }

@@ -42,29 +42,47 @@ const JobManagement = () => {
     selFiles.has(id) ? selFiles.delete(id) : selFiles.add(id);
     setFiles((prev) => ({ ...prev, selIds: selFiles }));
   }
+  // const handleCreateJob = async () => {
+  //   if (!projectId || !files.selIds.size) return;
+  //   setJobs((prev) => ({ ...prev, isCreate: true }))
+  //   const newJob: Omit<SavedJobs, 'id'> = {
+  //     createdAt: new Date().toISOString(),
+  //     fileIds: Array.from(files.selIds),
+  //     projectId: projectId!,
+  //     completedAt: '',
+  //     downloadUrl: '',
+  //     progress: 0,
+  //     status: 'PROCESSING'
+  //   };
+  //   try {
+  //     const res = await apiService.createZipJob(newJob);
+  //     let count = 0;
+  //     setJobs((prev) => {
+  //       const newData = [res, ...prev.data];
+  //       count = newData.length;
+  //       return { ...prev, data: newData };
+  //     })
+  //     setFiles((prev) => ({ ...prev, selIds: new Set() }))
+  //     await apiService.updateProjectDataCount(projectId, { jobsCount: count });
+
+  //   } catch (err) {
+  //     alert('Error in creating zip job');
+  //   } finally {
+  //     setJobs((prev) => ({ ...prev, isCreate: false }))
+  //   }
+  // }
+
   const handleCreateJob = async () => {
-    if (!projectId || !files.selIds.size) return;
+    if (!projectId|| !files.selIds.size) return;
     setJobs((prev) => ({ ...prev, isCreate: true }))
-    const newJob: Omit<SavedJobs, 'id'> = {
-      createdAt: new Date().toISOString(),
-      fileIds: Array.from(files.selIds),
-      projectId: projectId!,
-      completedAt: '',
-      downloadUrl: '',
-      progress: 0,
-      status: 'PROCESSING'
-    };
+    console.log("file.: ", files.selIds, Array.from(files.selIds));
     try {
-      const res = await apiService.createZipJob(newJob);
-      let count = 0;
+      const res = await apiService.createZipJob(projectId, Array.from(files.selIds));
       setJobs((prev) => {
         const newData = [res, ...prev.data];
-        count = newData.length;
         return { ...prev, data: newData };
       })
       setFiles((prev) => ({ ...prev, selIds: new Set() }))
-      await apiService.updateProjectDataCount(projectId, { jobsCount: count });
-
     } catch (err) {
       alert('Error in creating zip job');
     } finally {
@@ -73,11 +91,11 @@ const JobManagement = () => {
   }
 
   useEffect(() => {
-    const incompJobs = jobs.data.filter((j) => j.status === 'PROCESSING');
+    const incompJobs = jobs.data.filter((j) => j.status === 'PROCESSING'|| j.status === 'PENDING');
     if (!incompJobs.length) return;
     //poll logic
     const jobInterval = setInterval(async () => {
-      const res = await Promise.allSettled(incompJobs.map((j) => apiService.getJobStatus(j.id)));
+      const res = await Promise.allSettled(incompJobs.map((j) => apiService.getJobStatus(projectId!,j.id)));
       setJobs((prev) => {
         const jobData = prev.data.map((j): SavedJobs => {
           const existIdx = incompJobs.findIndex((ij) => ij.id === j.id);
@@ -85,29 +103,34 @@ const JobManagement = () => {
             const finalRes = res[existIdx];
             if (finalRes.status === 'fulfilled')
               return finalRes.value
-            else return { ...j, status: 'ERROR', progress: 0 }
+            else return { ...j, status: 'FAILED', progress: 0 }
           }
           return j;
         });
         return { ...prev, data: jobData }
       })
     }, 3000);
-
     return (() => clearInterval(jobInterval))
   }, [jobs.data]);
 
-  const handleDownloadZip = (url: string | null, name: string) => {
-    if (!url) return;
-    const testData = "test zip file";
-    const blob = new Blob([testData], { type: 'application/zip' });
-    const blobUrl = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = `${name}.zip`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(blobUrl);
+  // const handleDownloadZip = (url: string | null, name: string) => {
+  //   if (!url) return;
+  //   const testData = "test zip file";
+  //   const blob = new Blob([testData], { type: 'application/zip' });
+  //   const blobUrl = window.URL.createObjectURL(blob);
+  //   const link = document.createElement('a');
+  //   link.href = blobUrl;
+  //   link.download = `${name}.zip`;
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  //   window.URL.revokeObjectURL(blobUrl);
+  // }
+
+  const handleDownloadZip=(jobData:SavedJobs)=>{
+    // apiService.downloadZip(projectId!, id);
+    if(jobData.downloadUrl)
+    window.open(jobData.downloadUrl, '_blank');
   }
 
   const handleSelectAll=()=>{
@@ -238,14 +261,14 @@ const JobManagement = () => {
                         <tr key={idx} className='state-text'>
                           <td>{j.id}</td>
                           <td>
-                            <span className={`status-badge ${j.status.toLowerCase()}`}>{j.status}</span>
+                            <span className={`status-badge ${j.status?.toLowerCase()}`}>{j?.status}</span>
                           </td>
                           <td>{`${j.progress || 0}%`}</td>
                           <td>{formaFulltDate(j.createdAt)}</td>
                           <td>{j.completedAt ? formaFulltDate(j.completedAt) : ''}</td>
                           <td>{
                             j.status === 'COMPLETED' ?
-                              <button className='btn btn-success' title='Download' onClick={() => handleDownloadZip(j.downloadUrl, `Job-${j.id}`)}>
+                              <button className='btn btn-success' title='Download' onClick={() => handleDownloadZip(j)}>
 
                                 <svg width={"15px"} height={"15px"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                   <path strokeLinecap="round" strokeLinejoin="round" d="m9 13.5 3 3m0 0 3-3m-3 3v-6m1.06-4.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
