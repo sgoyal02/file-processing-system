@@ -3,6 +3,9 @@ import { jobController } from "./job.controller";
 
 
 const router = Router({ mergeParams: true });
-router.use('/', jobController.getAllByProject);
+router.get('/', jobController.getAllByProject);
+router.post('/', jobController.create);
+router.use('/:jobId', jobController.getJobStatus);
+router.use('/:jobId/download', jobController.downloadZip);
 
 export {router as jobRouter}
