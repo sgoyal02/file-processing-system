@@ -146,6 +146,11 @@
   cursor: not-allowed;
   opacity: 0.5;
 }
+.btn-action:hover {
+  background: var(--primary-hover);
+  color: var(--primary);
+}
+
 .btn-success:hover:not(:disabled) {
   background: var(--suceess-light);
   color: var(--success);
@@ -204,6 +209,7 @@
 .btn-open:hover {
   background: var(--primary-hover);
 }
+
 
 
 /*--- modal css values */

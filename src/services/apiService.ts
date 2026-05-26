@@ -17,7 +17,7 @@ export function useApiService() {
   //as per backend res format
   const handleResponse = async<T>(res: Response):Promise<T> => {
   const resData = await res.json();
-  console.log("rs datsa fomrat: ", resData)
+  console.log("rs data format: ", resData)
   if (!res.ok||!resData?.success) {
     if (res.status=== 401) {
       throw new Error('Unauthorized');
@@ -63,6 +63,15 @@ export function useApiService() {
     });
     return handleResponse<Project>(res);
   }
+
+  const updateProject= async(id:string|number, data:{name:string; description:string }): Promise<Project> => {
+  const res = await fetch(`${BASE_URL}/projects/${id}`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify(data),
+  });
+  return handleResponse<Project>(res);
+}
 
   const fetchProjectById = async (id: string): Promise<Project> => {
     const res = await fetch(`${BASE_URL}/projects/${id}`,
@@ -127,6 +136,7 @@ export function useApiService() {
     method: 'DELETE',
     headers: authHeaders(),
   });
+  console.log("res: ", res);
   await handleResponse<null>(res);
 }
 
@@ -159,6 +169,6 @@ export function useApiService() {
     handleLogin, isTokenMiss, createProject, fetchProjects,
     fetchProjectById, removeProject, fetchFiles,
     uploadFile, delFile, updateProjectDataCount, fetchJobs, createZipJob, getJobStatus,
-    downloadZip
+    downloadZip, updateProject
   }
 }

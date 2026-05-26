@@ -38,6 +38,20 @@ export const projController = {
     }
   },
 
+  //updtae
+ update:async(req: Request, res: Response) => {
+  const id= req.params.id as string;
+  const {name,description}= req.body;
+  try {
+    const updated = await projService.updateProject(id, name, description);
+    sendSuccess(res, updated, 'Project updated successfully', 200);
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : '';
+    const code = errMsg === 'Project not found.' ? 404 : 500;
+    sendError(res, errMsg || 'Failed to update project', code);
+  }
+},
+
   //del
   delete:async (req:Request, res:Response) => {
     const id = req.params.id as string;

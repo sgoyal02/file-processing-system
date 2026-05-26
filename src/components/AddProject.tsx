@@ -1,15 +1,21 @@
-import { useState, type SubmitEvent } from 'react';
-import type { AddProjectFormErr } from '../services/types';
+import { useEffect, useState, type SubmitEvent } from 'react';
+import type { AddProjectFormErr, Project } from '../services/types';
 import '../styles/login.css';
 
 interface AddProjectprops {
   onSubmit:(data:{ name: string; description: string})=> Promise<{success:boolean, msg:string}>;
   onCancel: () => void;
+  formData:Project | null
 }
 
-const AddProject=({ onSubmit, onCancel }: AddProjectprops)=> {
+const AddProject=({ onSubmit, onCancel, formData }: AddProjectprops)=> {
   const [inp, setInp] = useState({name:"", description:"", isSubmit: false})
   const [err, setErr] = useState<AddProjectFormErr>({});
+
+  useEffect(()=>{
+    if(formData)
+      setInp((prev)=>({...prev, name: formData.name, description: formData.description}));
+  },[formData]);
 
   const validateForm=(): boolean=> {
     const newErr: AddProjectFormErr = {};

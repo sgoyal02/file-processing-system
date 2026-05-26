@@ -9,6 +9,7 @@ interface ProjectsContextType {
   err: string;
   getProjects:() => Promise<void>;
   addProject:(data:{ name: string, description: string })=> Promise<void>;
+  update:(id: string|number, data:{ name: string, description: string })=> Promise<void>;
   delProject:(id: string|number)=> Promise<void>;
 }
 const ProjectsContext= createContext<ProjectsContextType | null>(null);
@@ -18,7 +19,7 @@ const ProjectsProvider =({ children}:{children: React.ReactNode})=> {
     data: Project[], isLoad: boolean, err:string
   }>({data:[], isLoad:false, err:""})
   const { onLogout } = useAuth();
-  const {fetchProjects, createProject, removeProject} = useApiService();
+  const {fetchProjects, createProject, updateProject, removeProject} = useApiService();
 
   const handleAuthError= useCallback((err: unknown)=> {
     if (err instanceof Error && err.message === 'Unauthorized') onLogout();
@@ -45,6 +46,16 @@ const ProjectsProvider =({ children}:{children: React.ReactNode})=> {
     }
   }, [getProjects]);
 
+    const update = useCallback(async (id: string|number, data:{name:string, description:string }) => {
+    try{
+    await updateProject(id, data);
+    await getProjects();
+    } catch (err){
+      handleAuthError(err);
+      throw err;
+    }
+  }, [getProjects]);
+
   const delProject = useCallback(async (id: string|number) => {
     try{
     await removeProject(id);
@@ -56,7 +67,7 @@ const ProjectsProvider =({ children}:{children: React.ReactNode})=> {
   }, [getProjects]);
 
   return (
-    <ProjectsContext.Provider value={{ ...state, getProjects, addProject, delProject }}>
+    <ProjectsContext.Provider value={{ ...state, getProjects, addProject, delProject, update }}>
       {children}
     </ProjectsContext.Provider>
   );

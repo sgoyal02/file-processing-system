@@ -20,6 +20,17 @@ export const projService= {
     return {...data,filesCount: 0,jobsCount: 0}
   },
 
+  updateProject:async(id:string, name:string, description:string) => {
+  if (!name || !description) {
+    throw new Error('Name and description fields required.');
+  }
+  const updatedProject = await projectRepo.update(id, name, description);
+  if (!updatedProject) {
+    throw new Error('Project not found.');
+  }
+  return updatedProject;
+},
+
   deleteProject:async (id:string) => {
     const rec = await projectRepo.delete(id);
     if (!rec) {

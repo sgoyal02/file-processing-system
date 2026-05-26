@@ -27,6 +27,13 @@ export const projectRepo = {
     return rows[0];
   },
 
+  update:async(id:string, name:string, description:string) => {
+  const queryTxt = `UPDATE projects SET name = $1, description = $2 WHERE id = $3 
+      RETURNING id, name, description, created_at AS "createdAt"`;
+  const res = await db.runQuery(queryTxt, [name, description, id]);
+  return res.rows[0] || null;
+},
+
   delete:async(id: string) => {
     const query= `DELETE FROM projects WHERE id = $1 RETURNING id`;
     const { rows } = await db.runQuery(query, [id]);

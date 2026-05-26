@@ -5,17 +5,18 @@ import { useProjects } from '../contexts/ProjectsContext';
 import { ProjectCard } from '../components/ProjectCard';
 import DialogModal from '../components/DialogModal';
 import AddProject from '../components/AddProject';
+import type { Project } from '../services/types';
 
 const ProjectsPage = () => {
-  const { data, isLoad, err, addProject, delProject, getProjects } = useProjects();
-  const [showModal, setShowModal] = useState(false);
+  const { data, isLoad, err, addProject, delProject, getProjects, update } = useProjects();
+  const [showModal, setShowModal] = useState<{isOpen: boolean, project: Project | null,}>({isOpen: false, project:null});
   useEffect(() => {
     getProjects();
   }, []);
 
-  const handleAdd=async(data:{name: string;description:string}):Promise<{ success: boolean; msg: string }>=>{
+  const handleUpsert=async(data:{name: string;description:string}):Promise<{ success: boolean; msg: string }>=>{
     try{
-      await addProject(data);
+      await (showModal.project ? update(showModal.project.id, data) : addProject(data));
       return{success: true, msg:""}
     }
     catch(err){
@@ -23,6 +24,10 @@ const ProjectsPage = () => {
       ? err.message
       : "Something went wrong"};
     }
+  }
+
+  const onClickUpdate=(project:Project)=>{
+    setShowModal((prev)=>({...prev, isOpen:true, project:project }))
   }
 
   return (
@@ -52,7 +57,7 @@ const ProjectsPage = () => {
                   </svg>
                 </div>
                 <p className="state-text">No projects yet. Create one to get started.</p>
-                <button className='btn-primary' onClick={() => setShowModal(true)}>
+                <button className='btn-primary' onClick={() => setShowModal((prev)=>({...prev, isOpen: true}))}>
                   <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
@@ -64,7 +69,7 @@ const ProjectsPage = () => {
                   <p className="grid-subtext">
                     {`${data.length} project${data.length !== 1 ? 's' : ''}`}
                   </p>
-                  <button className='btn-primary' onClick={() => setShowModal(true)}>
+                  <button className='btn-primary' onClick={() => setShowModal((prev)=>({...prev, isOpen: true}))}>
                     <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
@@ -77,15 +82,23 @@ const ProjectsPage = () => {
                       key={project.id}
                       project={project}
                       onDelete={delProject}
+                      onClickUpdate={onClickUpdate}
                     />
                   ))}
                 </div>
               </div>
       }
       {
-        showModal &&
-        <DialogModal isOpen={showModal} onClose={()=>setShowModal(false)} title="Add Project"
-        children={<AddProject onSubmit={handleAdd} onCancel={()=>setShowModal(false)}/>}
+        showModal.isOpen &&
+        <DialogModal isOpen={showModal.isOpen} 
+        onClose={()=>setShowModal((prev)=>({...prev, isOpen: false, project:null}))} 
+        title={showModal.project ? "Edit Project" : "Add Project"}
+        children={
+        <AddProject onSubmit={handleUpsert} 
+        onCancel={()=>setShowModal((prev)=>({...prev, isOpen: false , project:null}))}
+        formData={showModal.project}
+        />
+        }
         />
       }
     </div>
