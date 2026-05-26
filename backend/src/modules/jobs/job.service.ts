@@ -2,6 +2,7 @@ import path from "path";
 import { fileRepo } from "../files/file.repository";
 import { jobRepo } from "./job.repository";
 import { Worker } from "worker_threads";
+import { createZip } from "./zip.worker";
 
 const zipDir= path.join(process.cwd(), 'zips');
 
@@ -37,6 +38,7 @@ export const jobService={
     //worker set
     return new Promise<void>((resolve, reject) => {
     const zipFIlePath= path.join(__dirname, 'zip.worker.ts');
+    createZip();
     const worker= new Worker(zipFIlePath, {workerData:{jobId:job.id,filesData, outPath } });
 
     worker.on('message', async (msg) => {
@@ -48,9 +50,9 @@ export const jobService={
       } else if (msg.type === 'done') {
         console.log("done msg worker: ", msg);
         const url=`/api/projects/${projectId}/jobs/${job.id}/download`; //url add
-        await jobRepo.updateStatus(job.id, {
-          status: 'COMPLETED',
-          progress: 100,
+      await jobRepo.updateStatus(job.id, {
+        status: 'COMPLETED',
+        progress: 100,
           downloadUrl:url,
           completedAt: new Date().toISOString()
         });

@@ -1,20 +1,20 @@
-// import { workerData, parentPort } from 'worker_threads';
-// import * as archiver from 'archiver';
-// import fs from 'fs';
-// import path from 'path';
+import { workerData, parentPort } from 'worker_threads';
+import * as archiver from 'archiver';
+import fs from 'fs';
+import path from 'path';
 
-const { workerData, parentPort } = require('worker_threads');
-const archiver = require('archiver');
-const fs = require('fs');
-const path = require('path');
+// const { workerData, parentPort } = require('worker_threads');
+// const archiver = require('archiver');
+// const fs = require('fs');
+// const path = require('path');
 
 console.log("start worker data: ", workerData);
-const createZip = async () => {
+export const createZip = async () => {
     try {
     const outDir = path.dirname(workerData.outPath);
     await fs.promises.mkdir(outDir, {recursive: true});
     const output = fs.createWriteStream(workerData.outPath);
-    const archive = archiver('zip', {zlib:{level: 6}});
+    const archive = archiver.default('zip', {zlib:{level: 6}});
     archive.pipe(output);
 
     let comp = 0;     //comp calc
@@ -36,5 +36,4 @@ const createZip = async () => {
         parentPort?.postMessage({type: 'error', message: err.message});
     }
 }
-
-createZip();
+// createZip();
