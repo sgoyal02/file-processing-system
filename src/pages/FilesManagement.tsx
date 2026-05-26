@@ -111,18 +111,12 @@ const FilesManagement = () => {
     const handleDelFile = async (fileId: string | number) => {
         try {
             await apiService.delFile(id!, fileId);
-            // const filesLength = files.data.length - 1;
-            // console.log("fi len: ", filesLength, files.data)
-            // await apiService.updateProjectDataCount(id!, {
-            //     filesCount: filesLength < 0 ? 0 : filesLength
-            // });
             setFiles((prev) => ({
                 ...prev,
                 data: prev.data.filter((f) => f.id.toString() !== fileId.toString())
             }));
-        } catch (err) {
-            console.log("err del: ", err);
-            setFiles((prev) => ({ ...prev, delErr: "Del file failed. Try again." }))
+        } catch (err:any) {
+            setFiles((prev) => ({ ...prev, delErr:"Delete file failed. Try again." }))
         }
     }
 

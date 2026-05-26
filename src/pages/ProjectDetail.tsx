@@ -6,8 +6,8 @@ import { useApiService } from '../services/apiService';
 
 const ProjectDetail = () => {
   const navigate = useNavigate();
-  const [detailState, setDetailState] = useState<{ project: Project | null, isLoad: boolean, err: string, files: SavedFile[], jobs: SavedJobs[] }>
-    ({ project: null, isLoad: false, err: "", files: [], jobs: [] });
+  const [detailState, setDetailState] = useState<{ project: Project | null, isLoad: boolean, err: string, files: SavedFile[], jobs: SavedJobs[], fileErr:string, jobErr:string }>
+    ({ project: null, isLoad: false, err: "", files: [], jobs: [], fileErr:"", jobErr:"" });
 
   const { id } = useParams<{ id: string }>();
   const apiService = useApiService();
@@ -16,20 +16,27 @@ const ProjectDetail = () => {
     if (!id) return;
     setDetailState((prev) => ({ ...prev, isLoad: true, err: "" }))
 
-    Promise.all([
+    const fetchData=async()=>{
+      const result = await Promise.allSettled([
       apiService.fetchProjectById(id),
       apiService.fetchFiles(id!),
       apiService.fetchJobs(id!)
-    ]).then(([projData, fileData, jobsData]) =>
-      setDetailState((prev) => ({
-        ...prev, isLoad: false, project: projData, files: fileData,
-        jobs: jobsData
-      }))
-    )
-      .catch((err) => {
-        const msg = err instanceof Error ? err.message : 'Failed to get project.';
-        setDetailState((prev) => ({ ...prev, isLoad: false, err: msg }))
-      })
+    ]);
+    const projRes= result[0];
+    const filesRes= result[1];
+    const jobsRes= result[2];
+    setDetailState((prev) => ({
+      ...prev,
+      isLoad: false,
+      project: projRes.status=== 'fulfilled'? projRes.value : null,
+      files: filesRes.status=== 'fulfilled'? filesRes.value : [],
+      jobs: jobsRes.status=== 'fulfilled'? jobsRes.value : [],
+      err: projRes.status=== 'rejected'? 'Project not found' : "",
+      fileErr: filesRes.status=== 'rejected'? 'Files failed to load.' : "",
+      jobErr: jobsRes.status=== 'rejected'? 'Jobs failed to load.' : "",
+    }));
+    }
+    fetchData();
   }, [id]);
 
   const calcFilesStat = () => {
@@ -64,7 +71,7 @@ const ProjectDetail = () => {
             </svg>
           </div>
           <p className="state-text">{detailState.err || 'Project not found'}</p>
-          <button className="btn-secondary" onClick={() => navigate('/projects')}>
+          <button className="btn-primary" onClick={() => navigate('/projects')}>
             Back to Projects
           </button>
         </div>
@@ -90,6 +97,9 @@ const ProjectDetail = () => {
               <h3 className="card-name">{"Files"}</h3>
               <div className="card-body">
                 {!detailState.files.length ?
+                  !!detailState.fileErr ?
+                  <p className="card-description err-txt" style={{ marginBottom: "1rem" }}>{detailState.fileErr}</p>
+                  :
                   <p className="card-description" style={{ marginBottom: "1rem" }}>No files attached.</p>
                   :
                   <>
@@ -115,14 +125,27 @@ const ProjectDetail = () => {
                 }
               </div>
               <div className='card-footer'>
+                {!detailState.fileErr &&
                 <button className="flex-center btn-open"
                   onClick={() => navigate(`/projects/${id}/files`)}>
                   {!detailState.files.length ? "Upload Files" : "Manage Files"}
                 </button>
+                }
               </div>
             </div>
             <div className="project-card">
               <h3 className="card-name">Jobs</h3>
+              { !!detailState.jobErr ?
+              <>
+              <div className="card-body">
+                <div className="stats-text">
+                  <p className="card-description err-txt" style={{ marginBottom: "1rem" }}>{detailState.jobErr}</p>
+                  </div>
+                  </div>
+              </>
+
+                :
+                <>
               <div className="card-body">
                 <div className="stats-text">
                   <span className="file-count">{`${detailState.jobs.length} Total Job${detailState.jobs.length !== 1 ? 's' : ''}`}</span>
@@ -156,7 +179,6 @@ const ProjectDetail = () => {
                   </div>
                 </div>
               </div>
-
               <div className="card-footer">
                 <button
                   className="btn-open"
@@ -165,6 +187,8 @@ const ProjectDetail = () => {
                   Manage Jobs
                 </button>
               </div>
+              </>
+              }
             </div>
           </div>
         </div>
