@@ -16,7 +16,7 @@ export const fileRepo = {
 
   create: async(data:{name: string; filePath: string; type: string; size: number; projectId: string;}) => {
     const queryTxt = `INSERT INTO files (name, file_path, type, size, project_id, uploaded_at)
-        VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING name, file_path AS "filePath", type,
+        VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING id, name, file_path AS "filePath", type,
         size, project_id AS "projectId", uploaded_at AS "uploadedAt"`;
     const {rows} = await db.runQuery(queryTxt, [data.name,data.filePath, data.type, data.size, data.projectId]);
     return rows[0];

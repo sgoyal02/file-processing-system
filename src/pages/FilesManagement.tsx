@@ -106,11 +106,12 @@ const FilesManagement = () => {
     }, [files.delErr])
 
     const handleDelFile = async (fileId: string | number) => {
+        console.log("fileId to del: ", fileId);
         try {
             await apiService.delFile(id!, fileId);
             setFiles((prev) => ({
                 ...prev,
-                data: prev.data.filter((f) => f.id.toString() !== fileId.toString())
+                data: prev.data?.filter((f) => f.id?.toString() !== fileId?.toString())
             }));
         } catch (err:any) {
             setFiles((prev) => ({ ...prev, delErr:"Delete file failed. Try again." }))

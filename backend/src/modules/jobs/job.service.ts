@@ -33,12 +33,14 @@ export const jobService={
         return;
       }
       const outPath = path.join(zipDir,projectId,`job-${job.id}.zip`);
+      const isProd= process.env.NODE_ENV === 'production';
     //worker set
     return new Promise<void>((resolve, reject) => {
-    const zipFIlePath= path.join(__dirname, 'zip.worker.ts');
+    const zipFIlePath= !isProd ? path.join(__dirname, 'zip.worker.ts') : 
+                      path.join(__dirname, 'zip.worker.js');
     const worker= new Worker(zipFIlePath, 
                 {workerData:{jobId:job.id,filesData, outPath },
-                  execArgv: ['--import', 'tsx'] });
+                  execArgv: isProd ? [] : ['--import', 'tsx'] });
 
     worker.on('message', async (msg) => {
       if (msg.type === 'progress') {
