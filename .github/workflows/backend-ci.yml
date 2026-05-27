@@ -28,18 +28,19 @@ jobs:
       - name: Install backend dependencies
         run: npm install
       
-      - name: Build backend
-        run: npm run build
-      
       - name: Create env file
         run: |
           echo "PORT=4000" >> .env
           echo "DB_URL=postgresql://test:test@localhost:5432/testdb" >> .env
 
+      - name: Build backend
+        run: npm run build
+
       - name: Test backend starts
-        run: npm run dev &
+        run: node dist/index.js &
       
       - name: Server waiting
         run: sleep 3
-      - name: api testing
+
+      - name: Api testing
         run: curl http://localhost:4000

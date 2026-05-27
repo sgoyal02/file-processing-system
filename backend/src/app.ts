@@ -17,7 +17,13 @@ async function checkDbConnect(){
 }
 checkDbConnect();
 
-app.use(cors())
+// app.use(cors())
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://file-processing-system-omega.vercel.app/'
+  ]
+}));
 app.use(express.json());
 app.use((req, res, next) => {
     console.log(`--${req.method}: ${req.path}`);
