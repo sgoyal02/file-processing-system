@@ -33,7 +33,6 @@ export const fileController = {
       await fileService.deleteFile(fileId);
       sendSuccess(res, null, 'File deleted', 200);
     } catch (err) {
-      console.log("file err api: ", err)
       const errMsg = err instanceof Error ? err.message : '';
       const code = errMsg === 'File not found.' ? 404 : 500;
       sendError(res, errMsg || 'Delete failed', code);

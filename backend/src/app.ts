@@ -21,7 +21,7 @@ checkDbConnect();
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://file-processing-system-omega.vercel.app/'
+    'https://file-processing-system-omega.vercel.app'
   ]
 }));
 app.use(express.json());

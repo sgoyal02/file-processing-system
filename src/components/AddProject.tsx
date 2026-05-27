@@ -30,7 +30,6 @@ const AddProject=({ onSubmit, onCancel, formData }: AddProjectprops)=> {
     if (!validateForm()) return;
     setInp((prev)=>({...prev, isSubmit: true}))
     const {success, msg} =  await onSubmit({ name: inp.name.trim(), description: inp.description.trim() });
-    console.log("succes, ", success, msg);
     if(success)
         onCancel();
     else{

@@ -2,7 +2,6 @@ import path from "path";
 import { fileRepo } from "../files/file.repository";
 import { jobRepo } from "./job.repository";
 import { Worker } from "worker_threads";
-import { createZip } from "./zip.worker";
 
 const zipDir= path.join(process.cwd(), 'zips');
 
@@ -25,7 +24,6 @@ export const jobService={
       const filesData:{path:string; name:string }[] = [];
       for (const fileId of fileIds) {
         const file = await fileRepo.findById(fileId.toString());
-        console.log("filef etch: ", file);
         if (file) 
         filesData.push({path:file.filepath, name:file.name });
       }
@@ -38,8 +36,9 @@ export const jobService={
     //worker set
     return new Promise<void>((resolve, reject) => {
     const zipFIlePath= path.join(__dirname, 'zip.worker.ts');
-    createZip();
-    const worker= new Worker(zipFIlePath, {workerData:{jobId:job.id,filesData, outPath } });
+    const worker= new Worker(zipFIlePath, 
+                {workerData:{jobId:job.id,filesData, outPath },
+                  execArgv: ['--import', 'tsx'] });
 
     worker.on('message', async (msg) => {
       if (msg.type === 'progress') {
@@ -48,7 +47,6 @@ export const jobService={
           progress: msg.progress
         });
       } else if (msg.type === 'done') {
-        console.log("done msg worker: ", msg);
         const url=`/api/projects/${projectId}/jobs/${job.id}/download`; //url add
       await jobRepo.updateStatus(job.id, {
         status: 'COMPLETED',

@@ -75,7 +75,6 @@ const JobManagement = () => {
   const handleCreateJob = async () => {
     if (!projectId|| !files.selIds.size) return;
     setJobs((prev) => ({ ...prev, isCreate: true }))
-    console.log("file.: ", files.selIds, Array.from(files.selIds));
     try {
       const res = await apiService.createZipJob(projectId, Array.from(files.selIds));
       setJobs((prev) => {
@@ -94,6 +93,7 @@ const JobManagement = () => {
     const incompJobs = jobs.data.filter((j) => j.status === 'PROCESSING'|| j.status === 'PENDING');
     if (!incompJobs.length) return;
     //poll logic
+    const interval = jobs.data.some(j => j.status=== 'PROCESSING')? 1000 : 3000;
     const jobInterval = setInterval(async () => {
       const res = await Promise.allSettled(incompJobs.map((j) => apiService.getJobStatus(projectId!,j.id)));
       setJobs((prev) => {
@@ -109,28 +109,18 @@ const JobManagement = () => {
         });
         return { ...prev, data: jobData }
       })
-    }, 3000);
+    }, interval);
     return (() => clearInterval(jobInterval))
   }, [jobs.data]);
 
-  // const handleDownloadZip = (url: string | null, name: string) => {
-  //   if (!url) return;
-  //   const testData = "test zip file";
-  //   const blob = new Blob([testData], { type: 'application/zip' });
-  //   const blobUrl = window.URL.createObjectURL(blob);
-  //   const link = document.createElement('a');
-  //   link.href = blobUrl;
-  //   link.download = `${name}.zip`;
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  //   window.URL.revokeObjectURL(blobUrl);
-  // }
 
-  const handleDownloadZip=(jobData:SavedJobs)=>{
-    // apiService.downloadZip(projectId!, id);
-    if(jobData.downloadUrl)
-    window.open(jobData.downloadUrl, '_blank');
+  const handleDownloadZip=async(jobData:SavedJobs)=>{
+   if (!jobData.downloadUrl) return;
+   try{
+    await apiService.downloadZip(jobData);
+   }catch(err){
+    alert(err instanceof Error ? err.message : 'Download failed.' )
+   }
   }
 
   const handleSelectAll=()=>{
@@ -265,9 +255,9 @@ const JobManagement = () => {
                           </td>
                           <td>{`${j.progress || 0}%`}</td>
                           <td>{formaFulltDate(j.createdAt)}</td>
-                          <td>{j.completedAt ? formaFulltDate(j.completedAt) : ''}</td>
+                          <td>{j.completedAt ? formaFulltDate(j.completedAt) : '-'}</td>
                           <td>{
-                            j.status === 'COMPLETED' ?
+                            j.status === 'COMPLETED' &&
                               <button className='btn btn-success' title='Download' onClick={() => handleDownloadZip(j)}>
 
                                 <svg width={"15px"} height={"15px"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -275,7 +265,6 @@ const JobManagement = () => {
                                 </svg>
 
                               </button>
-                              : '-'
                           }</td>
                         </tr>
                       ))}

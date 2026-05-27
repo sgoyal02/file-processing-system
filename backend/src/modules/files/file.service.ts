@@ -17,7 +17,6 @@ export const fileService = {
     await fs.mkdir(projectDir, { recursive: true });
     const filePath = path.join(projectDir, file.originalname);
     await fs.writeFile(filePath, file.buffer);
-    console.log("fileData: ",projectDir, filePath, file.originalname, file.mimetype, file.buffer )
    
   //- on err still saving in folder?? check-- 
     // return await fileRepo.create({

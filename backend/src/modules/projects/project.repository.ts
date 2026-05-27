@@ -7,7 +7,6 @@ export const projectRepo = {
         (SELECT COUNT(*)::int FROM jobs j WHERE j.project_id=p.id) AS "jobsCount"
         FROM projects p ORDER BY p.created_at DESC`;
     const {rows} = await db.runQuery(query);
-    console.log("rows: ", rows);
     return rows;
   },
 

@@ -17,7 +17,6 @@ export function useApiService() {
   //as per backend res format
   const handleResponse = async<T>(res: Response):Promise<T> => {
   const resData = await res.json();
-  console.log("rs data format: ", resData)
   if (!res.ok||!resData?.success) {
     if (res.status=== 401) {
       throw new Error('Unauthorized');
@@ -35,7 +34,6 @@ export function useApiService() {
         body: JSON.stringify({email: data.email, password:data.pswd})
       });
       const resData= await res.json();
-      console.log("login res: ", res, resData);
       if(!resData.success){
         return {user:null, errTxt: resData.msg || 'Reuqest fail'}
       }
@@ -51,7 +49,6 @@ export function useApiService() {
 
   const fetchProjects = async (): Promise<Project[]> => {
     const res = await fetch(`${BASE_URL}/projects`, { headers: authHeaders() });
-    console.log("res proj: ", res);
     return handleResponse<Project[]>(res);
   }
 
@@ -136,7 +133,6 @@ export function useApiService() {
     method: 'DELETE',
     headers: authHeaders(),
   });
-  console.log("res: ", res);
   await handleResponse<null>(res);
 }
 
@@ -156,13 +152,23 @@ export function useApiService() {
 
   const getJobStatus = async (projectId:string|number, id: string| number):Promise<SavedJobs> => {
     const res = await fetch(`${BASE_URL}/projects/${projectId}/jobs/${id}`,{
+      method:"GET",
       headers: authHeaders()
     });
     return handleResponse<SavedJobs>(res);
   };
 
-  const downloadZip= (projectId: string | number, id:string | number) => {
-  window.open(`${BASE_URL}/api/projects/${projectId}/jobs/${id}/download`, '_blank');
+  const downloadZip= async(data:SavedJobs) => {
+    const fullUrl = `${import.meta.env.VITE_API_URL}${data.downloadUrl}`;
+    const res = await fetch(fullUrl, {
+      method:"HEAD",
+      headers: authHeaders()
+    })
+    if (!res.ok) {
+    if (res.status === 404) throw new Error('zip no longer exists.');
+    throw new Error('Download failed.');
+  }
+  window.open(fullUrl, '_blank');
   };
 
   return {

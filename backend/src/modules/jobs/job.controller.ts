@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { jobService } from "./job.service";
 import { sendError, sendSuccess } from "../../response";
 import path from "path";
+import fs from 'fs';
 
 const zipDir= path.join(process.cwd(), 'zips');
 
@@ -30,7 +31,6 @@ export const jobController={
   create:async(req: Request, res: Response)=> {
     const id = req.params.id as string;
     const {fileIds} = req.body as {fileIds: string[]};
-    console.log("backend start: ", fileIds, id);
     if (!fileIds?.length) {
       sendError(res, 'files not selected yet', 400);
       return;
@@ -62,7 +62,16 @@ export const jobController={
         return;
       }
       const zipPath = path.join(zipDir, job.projectId.toString(), `job-${jobId}.zip`);
-      res.download(zipPath, `job-${jobId}.zip`);
+       const exists = await fs.promises.access(zipPath).then(() => true).catch(() => false);
+    if (!exists) {
+      sendError(res, 'Zip no longer exists.', 404);
+      return;
+    }
+      res.download(zipPath, `job-${jobId}.zip`, (err)=>{
+        if(err){
+          sendError(res, 'Download failed.', 500);
+        }
+      });
     } catch (err) {
       sendError(res, err instanceof Error? err.message: 'Download fail', 500);
     }

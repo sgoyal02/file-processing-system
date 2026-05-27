@@ -60,7 +60,6 @@ const FilesManagement = () => {
                         )
                     }))
                 });
-                console.log("on up file: ", fileData);
                 //after comp
                 setFiles((prev) => ({
                     ...prev,
@@ -80,8 +79,6 @@ const FilesManagement = () => {
         });
 
         const res = await Promise.allSettled(uploadItems);
-
-        console.log("res after all ups: ", res);
         //to check onlysuccess uploads
         const filterRes = res.filter((r) => r.status === 'fulfilled').map((r) => r.value);
         if (filterRes.length) {
