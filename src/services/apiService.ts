@@ -91,7 +91,7 @@ export function useApiService() {
 
 
   const uploadFile = async (file: File, id: string | number,
-  onProgress: (percent: number) => void): Promise<SavedFile> => {
+  onProgress: (percent: number) => void, signal?:AbortSignal): Promise<SavedFile> => {
  await new Promise((resolve) => {
       let pr = 0;
       const gap = setInterval(() => {
@@ -113,6 +113,7 @@ export function useApiService() {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
+    signal
   });
   return handleResponse<SavedFile>(res);
 }

@@ -13,6 +13,7 @@ const FilesManagement = () => {
     }>({ data: [], isLoad: false, err: "", inpFiles: [], delErr: "" });
 
     const uploadRef = useRef<Set<string>>(new Set());
+    const abortRef= useRef<Map<string, AbortController>>(new Map());  //for inpfIles del in uplaod tym
 
     useEffect(() => {
         if (!id) return;
@@ -51,6 +52,8 @@ const FilesManagement = () => {
         if (!selFiles.length) return;
         const uploadItems = selFiles?.map(async (item) => {
             uploadRef.current.add(item.id);
+            const controller = new AbortController();
+            abortRef.current.set(item.id, controller);
             try {
                 const fileData = await apiService.uploadFile(item.file, id!, (amt) => {
                     setFiles((prev) => ({
@@ -59,15 +62,19 @@ const FilesManagement = () => {
                             f.id === item.id ? { ...f, progress: amt } : f  //for fil progress
                         )
                     }))
-                });
+                }, controller.signal);
+
+                abortRef.current.delete(item.id);
                 //after comp
                 setFiles((prev) => ({
                     ...prev,
                     inpFiles: prev.inpFiles.map((f) => f.id === item.id ? { ...f, status: 'completed' } : f)
                 }))
                 return fileData;
-            } catch (err) {
+            } catch (err:any) {
                 uploadRef.current.delete(item.id);  //ref del
+                abortRef.current.delete(item.id);
+                if (err.name === 'AbortError') return null;
                 setFiles((prev) => ({
                     ...prev,
                     inpFiles: prev.inpFiles.map((f) =>
@@ -80,7 +87,7 @@ const FilesManagement = () => {
 
         const res = await Promise.allSettled(uploadItems);
         //to check onlysuccess uploads
-        const filterRes = res.filter((r) => r.status === 'fulfilled').map((r) => r.value);
+        const filterRes = res.filter((r) => r.status === 'fulfilled' && r.value!==null).map((r) => (r as PromiseFulfilledResult<any>).value);
         if (filterRes.length) {
             setTimeout(() => {
                 setFiles((prev) => ({
@@ -106,7 +113,6 @@ const FilesManagement = () => {
     }, [files.delErr])
 
     const handleDelFile = async (fileId: string | number) => {
-        console.log("fileId to del: ", fileId);
         try {
             await apiService.delFile(id!, fileId);
             setFiles((prev) => ({
@@ -116,6 +122,18 @@ const FilesManagement = () => {
         } catch (err:any) {
             setFiles((prev) => ({ ...prev, delErr:"Delete file failed. Try again." }))
         }
+    }
+
+    const handleCancelUpload=async(fileId:string| number)=>{
+        const controller = abortRef.current.get(fileId.toString());
+        if (controller) {
+            controller.abort();
+            abortRef.current.delete(fileId.toString());
+        }
+    uploadRef.current.delete(fileId.toString());
+    setFiles((prev) => ({...prev,
+        inpFiles: prev.inpFiles.filter((f) => f.id!== fileId)
+    }));
     }
 
     return (
@@ -153,11 +171,7 @@ const FilesManagement = () => {
                                 <div className='flex-between'>
                                     <span className='state-text'>{item.file.name}</span>
                                     <button className="flex-center btn btn-delete"
-                                        onClick={() =>
-                                            setFiles((prev) => ({
-                                                ...prev,
-                                                inpFiles: prev.inpFiles.filter((f) => f.id !== item.id)
-                                            }))}
+                                        onClick={()=>handleCancelUpload(item.id)}
                                         title="Delete file">
                                         <svg width={"15px"} height={"15px"} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
