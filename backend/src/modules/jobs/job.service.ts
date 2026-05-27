@@ -33,7 +33,7 @@ export const jobService={
         return;
       }
       const outPath = path.join(zipDir,projectId,`job-${job.id}.zip`);
-      const isProd= process.env.NODE_ENV === 'production';
+      const isProd= process.env.NODE_ENV === 'production' || !!process.env.RENDER;  //for prod render->true
     //worker set
     return new Promise<void>((resolve, reject) => {
     const zipFIlePath= !isProd ? path.join(__dirname, 'zip.worker.ts') : 
