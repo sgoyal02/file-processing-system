@@ -25,6 +25,12 @@ Backend-
 
 ## Folder Structure
 ### Frontend
+`frontend/`
+- src- react ts application code with frontend compoenents architeture
+- index.html- app entry html
+- vite.confg.ts- vite config
+
+`frontend/src`
 - components- Reusable UI components or modals
 - pages- route level apges
 - contexts- authentication, global states
@@ -59,6 +65,7 @@ cd repo-name
 ```
 ### 2. Frontedn setup
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
