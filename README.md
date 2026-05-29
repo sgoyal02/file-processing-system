@@ -24,10 +24,15 @@ Backend-
 
 
 ## Folder Structure
+### Infrastructure
+`infra/`
+- docker-compose.yml- docker compose configuration for frontend, backend and postgres services
+
 ### Frontend
 `frontend/`
 - src- react ts application code with frontend compoenents architeture
 - index.html- app entry html
+- Dockerfile- frontend container configuration
 - vite.confg.ts- vite config
 
 `frontend/src`
@@ -44,6 +49,7 @@ Backend-
 - src- backend APIs implementation
 - uploads- uploaded project files
 - zips- generated zip outputs
+- Dockerfile- backend container configuration
 
 `backend/src/modules`
 - auth- user authentication 
@@ -87,6 +93,21 @@ Run backend-
 npm run dev
 ```
 - Backend runs on- http://localhost:4000
+
+## Docker Setup
+### Run application using Docker
+- in project root,
+```bash
+docker compose -f infra/docker-compose.yml up --build
+```
+- frontend runs on: http://localhost:5173
+- backend runs on: http://localhost:4000
+- postgreSQL runs inside Docker container
+
+### Docker services
+- Frontend- react+vite application
+- Backend- node js+express APIs
+- Database- PostgreSQL container
 
 ## Features
 ### Authentication
