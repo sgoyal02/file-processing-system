@@ -53,8 +53,8 @@ export interface Project{
     name:string,
     description:string,
     createdAt:string,
-    filesCount:number,
-    jobsCount:number
+    filesCount?:number,
+    jobsCount?:number
 }
 export interface AddProjectFormErr{
     name?:string,
